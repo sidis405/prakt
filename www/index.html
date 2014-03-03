@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>PRAKT</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=yes, width=device-width">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+    <link href="css/ionic.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">    
+
+
+    <script src="js/ionic.bundle.js"></script>
+
+    <!-- Needed for Cordova/PhoneGap (will be a 404 during development) -->
+    <script src="cordova.js"></script>
+    <script type="text/javascript" src="js/tv-premieres-app/app.js"></script>
+    <script type="text/javascript" src="js/tv-premieres-app/controllers/mainController.js"></script>
+  </head>
+  <body ng-app="TVPremieresApp" ng-controller="mainController" ng-init="init()">
+  <content has-header="true" scroll="false">
+    <div class='banner'>
+        <div class='container'>
+            <h1>PRAKT</h1>
+        </div>
+    </div>
+    <div class="container main-frame" >
+        <div class="search-box row-fluid form-inline">
+            <label for=""></label>
+            <input type="text" ng-model="filterText">
+            <label>Genre: </label>
+            <select ng-model="genreFilter" ng-options="label for label in availableGenres">
+                <option value="">All</option>
+            </select>
+            <label>Order by: </label>
+            <select ng-model="orderField" ng-options="label for label in orderFields" class="input-medium"></select>
+            <select ng-model="orderReverse"class="input-medium">
+                <option value="true">Descending</option>
+                <option value="false">Ascending</option>
+            </select>
+        </div>
+        <div class="results-top"></div>
+        <div class="results-container">
+            <ul class="episode-list">
+            
+            <li ng-repeat="tvshow in results| filter: filterText | isGenre:genreFilter | orderBy:customOrder:orderReverse">
+                <div class="row-fluid">
+                    <div class="span3">
+                        <img src="{{tvshow.episode.images.screen}}" />
+                        <div class="ratings">
+                            <strong>Ratings:</strong> 
+                            <span class="label"><i class="icon-thumbs-up"></i> {{tvshow.episode.ratings.loved}}</span> 
+                            <span class="label"><i class="icon-thumbs-down"></i> {{tvshow.episode.ratings.hated}}</span> 
+                            <span class="label label-important" ng-class="{'label-success': tvshow.episode.ratings.percentage >= 50}">
+                            <strong>%</strong> {{tvshow.episode.ratings.percentage}}</div>
+                    </div>
+                    <div class="span6">
+                        <h3>{{tvshow.show.title}}: {{tvshow.episode.title}}</h3>
+                        <p>{{tvshow.episode.overview}}</p>
+                    </div>
+                    <div class="span3">
+                        <div class="fulldate pull-right label label-info">{{tvshow.date}}</div>
+                        <ul class="show-info">
+                            <li><strong>On Air:</strong> {{tvshow.show.air_day}} {{tvshow.show.air_time}}</li>
+                            <li><strong>Network:</strong> {{tvshow.show.network}}</li>
+                            <li><strong>Season #:</strong> {{tvshow.episode.season}}</li>
+                            <li>
+                                <strong>Genres:</strong> 
+                                <span class="label label-inverse genre" ng-repeat="genre in tvshow.show.genres" ng-click="setGenreFilter(genre)">{{genre}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+
+            </ul>
+        </div>
+        <div class="results-bottom"></div>
+    </div>
+    </content>
+</body>
+</html>
